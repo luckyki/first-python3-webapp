@@ -1,6 +1,6 @@
-<u>Day 1-搭建开发环境</u>
+Day 1-搭建开发环境
 
-Day 2-编写Web App骨架
+<u>Day 2-编写Web App骨架</u>
 
 Day 3-编写ORM
 
@@ -34,4 +34,4 @@ Day 16-编写移动App
 
 今天要做什么？
 
-使用conda 创建了一个名为py35的python3.5环境；在py35环境下安装aiohttp,jinja2,aiomysql包。
+加深理解asyncio的应用，理解[yield表达式](http://yidishui.top/2018/02/04/Git-Usage-Method/)及yield from,加强对并发的认知。初识aiohttp及应用。
