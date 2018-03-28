@@ -6,9 +6,9 @@ Day 3-编写ORM
 
 Day 4 -编写Model
 
-<u>Day 5-编写Web框架</u>
+Day 5-编写Web框架
 
-Day 6-编写配置文件
+<u>Day 6-编写配置文件</u>
 
 Day 7-编写Mvc
 
@@ -34,61 +34,24 @@ Day 16-编写移动App
 
 ### 今天要做什么？
 
-从使用者角度看，aiohttp比较底层，使用aiohttp编写一个URL处理函数需要如下几步
+有了Web框架和ORM框架，我们就可以开始装配App了。
 
-```bash
-#第一步，编写一个用@asyncio.coroutine装饰的函数：
-@asyncio.coroutine
-def handle_url_xxx(request):
-	pass
-#第二步，传入的参数需要自己从request中获取：
-url_param = request.match_info['key']
-query_params = parse_qs(request.query_string)
-#第三步,自己构造Response对象：
-text = render('templete',data)
-return web.Response(text.encode('utf-8'))
-
-```
-
-为了让使用者编写少的代码，自己封装一个适合的web框架。
+通常，一个Web App在运行时都需要读取配置文件，比如数据库的用户名、口令等，在不同的环境中运行时，Web App可以通过读取不同的配置文件来获得正确的配置。
 
 
 
-### 编写Web框架的思路
+### 配置思路
+1、编写本地配置文件config_default.py
+2、编写部署环境配置文件config_override.py   #覆盖部分本地配置
+3、编写统一获取配置文件config.py
 
-```bash
-自定义Web框架思路:
 
-利用@get和@post将一个函数<font color=#0099ff  size=4>映射</font>为一个URL处理函数;
-
-URL处理函数不一定是一个coroutine,使用RequestHandler()来<font color=#0099ff  size=4>封装</font>一个URL处理函数;
-
-再编写一个add_route函数，<font color=#0099ff  size=4>注册</font>一个URL处理函数;
-
-接下来，将多册的add_route()注册调用变成<font color=#0099ff  size=4>自动扫描</font>；
-
-最后在app.py中<font color=#0099ff  size=4>加入</font>middleware、jinja2模板和自注册的<font color=#0099ff  size=4>支持</font>.
-
-```
 
 ### 参考
 
-1、编写apis.py文件和异步框架coroweb.py文件。
-
-2、添加处理程序handlers.py文件。
-
-3、在app.py文件加入middleware、jinja2模板和自注册的支持。
 
 
 
 ### 遇到的问题!!!
 
-1、对于具体几个步骤不是很清晰
-
-2、get函数属于装饰器的内容，比较有难度
-
-3、middleware是一个比较新颖的内容，有点挑战。
-
-'pymysql.err.IntegrityError: (1062, "Duplicate entry 'test@example.com' for key 'idx_email'")'
-
-2、数据也存在root用户和数据库的用户.
+1、config_default.py文件中db中user和password与前面初始化数据库SQL脚本中不一致，因统一修改为www-data.
