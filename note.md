@@ -4,9 +4,9 @@ Day 2-编写Web App骨架
 
 Day 3-编写ORM
 
-<u>Day 4 -编写Model</u>
+Day 4 -编写Model
 
-Day 5-编写Web框架
+<u>Day 5-编写Web框架</u>
 
 Day 6-编写配置文件
 
@@ -34,118 +34,60 @@ Day 16-编写移动App
 
 ### 今天要做什么？
 
-上一节我们编写好了自己的ORM，现在就是开始使用了，可参考sqlalchemy的编写思路。
-
-
-
-### 编写Model的思路
+从使用者角度看，aiohttp比较底层，使用aiohttp编写一个URL处理函数需要如下几步
 
 ```bash
-1、使用SQL脚本(schema.sql)初始化数据库
-> mysql -u root -p
-Enter password:******
-mysql> source F:\hello world\schema.sql #source file
-Query OK, 3 rows affected (0.28 sec)
+#第一步，编写一个用@asyncio.coroutine装饰的函数：
+@asyncio.coroutine
+def handle_url_xxx(request):
+	pass
+#第二步，传入的参数需要自己从request中获取：
+url_param = request.match_info['key']
+query_params = parse_qs(request.query_string)
+#第三步,自己构造Response对象：
+text = render('templete',data)
+return web.Response(text.encode('utf-8'))
 
-Query OK, 1 row affected (0.00 sec)
-
-Database changed
-Query OK, 0 rows affected (0.00 sec)
-
-Query OK, 0 rows affected (0.28 sec)
-
-Query OK, 0 rows affected (0.22 sec)
-
-Query OK, 0 rows affected (0.18 sec)
-mysql> 此处应该有掌声！！！！
-
-2、编写python语言model表（model.py).
-
-3、运行数据库写入代码(testmysql.py)测试数据库，在Navicat中观察数据库变化.
 ```
 
+为了让使用者编写少的代码，自己封装一个适合的web框架。
+
+
+
+### 编写Web框架的思路
+
+```bash
+自定义Web框架思路:
+
+利用@get和@post将一个函数<font color=#0099ff  size=4>映射</font>为一个URL处理函数;
+
+URL处理函数不一定是一个coroutine,使用RequestHandler()来<font color=#0099ff  size=4>封装</font>一个URL处理函数;
+
+再编写一个add_route函数，<font color=#0099ff  size=4>注册</font>一个URL处理函数;
+
+接下来，将多册的add_route()注册调用变成<font color=#0099ff  size=4>自动扫描</font>；
+
+最后在app.py中<font color=#0099ff  size=4>加入</font>middleware、jinja2模板和自注册的<font color=#0099ff  size=4>支持</font>.
+
+```
 
 ### 参考
 
-#### mysql初始化脚本
+1、编写apis.py文件和异步框架coroweb.py文件。
 
-```bash
--- schema.sql
+2、添加处理程序handlers.py文件。
 
-drop database if exists awesome;
-
-create database awesome;
-
-use awesome;
-
-grant select, insert, update, delete on awesome.* to 'www-data'@'localhost' identified by 'www-data';
-
-create table users (
-    `id` varchar(50) not null,
-    `email` varchar(50) not null,
-    `passwd` varchar(50) not null,
-    `admin` bool not null,
-    `name` varchar(50) not null,
-    `image` varchar(500) not null,
-    `created_at` real not null,
-    unique key `idx_email` (`email`),
-    key `idx_created_at` (`created_at`),
-    primary key (`id`)
-) engine=innodb default charset=utf8;
-
-create table blogs (
-    `id` varchar(50) not null,
-    `user_id` varchar(50) not null,
-    `user_name` varchar(50) not null,
-    `user_image` varchar(500) not null,
-    `name` varchar(50) not null,
-    `summary` varchar(200) not null,
-    `content` mediumtext not null,
-    `created_at` real not null,
-    key `idx_created_at` (`created_at`),
-    primary key (`id`)
-) engine=innodb default charset=utf8;
-
-create table comments (
-    `id` varchar(50) not null,
-    `blog_id` varchar(50) not null,
-    `user_id` varchar(50) not null,
-    `user_name` varchar(50) not null,
-    `user_image` varchar(500) not null,
-    `content` mediumtext not null,
-    `created_at` real not null,
-    key `idx_created_at` (`created_at`),
-    primary key (`id`)
-) engine=innodb default charset=utf8;
-```
-
-#### 测试数据库代码
-
-```bash
-#testmysql.py
-import orm
-from models import User, Blog, Comment
-import asyncio
-
-loop = asyncio.get_event_loop()
-
-@asyncio.coroutine
-def test():
-    #注意修改db,user,password可以填写root的
-    yield from orm.create_pool(loop=loop,user='www-data', password='www-data', db='awesome')
-
-    u = User(name='Test', email='test@example.com', passwd='1234567890', image='about:blank')
-
-    yield from u.save()
-    
-loop.run_until_complete(test())
-```
+3、在app.py文件加入middleware、jinja2模板和自注册的支持。
 
 
 
 ### 遇到的问题!!!
 
-1、在使用测试脚本时发现对于已经写入的信息再次写入会报错.
+1、对于具体几个步骤不是很清晰
+
+2、get函数属于装饰器的内容，比较有难度
+
+3、middleware是一个比较新颖的内容，有点挑战。
 
 'pymysql.err.IntegrityError: (1062, "Duplicate entry 'test@example.com' for key 'idx_email'")'
 
