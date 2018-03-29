@@ -10,9 +10,9 @@ Day 5-编写Web框架
 
 Day 6-编写配置文件
 
-<u>Day 7-编写Mvc</u>
+Day 7-编写Mvc
 
-Day 8-构建前端
+<u>Day 8-构建前端</u>
 
 Day 9-编写API
 
@@ -34,45 +34,29 @@ Day 16-编写移动App
 
 ### 今天要做什么？
 
-现在，ORM框架、Web框架和配置都已就绪，我们可以开始编写一个最简单的MVC，把它们全部启动起来。
+前面跑通了一个最简单的MVC，但是页面效果肯定不会让人满意，今天就来设计美观简洁的页面。
 
 ### 配置思路
-1、在handlers.py中编写首页URLD的函数
+1、下载uikit这个强大的CSS框架并添加一些字体模板到www/static目录下，并按照类别归类:
 
-2、在模板的根目录templates下创建test.html
+2、利用uikit这个CSS框架来完父模板\__base__\.html的编写:
 
-3、运行app.py查看效果
+3、继承\__base__\.html模板编写首页页面blogs.html:
+
+4、更新handlers.py中的首页URL处理函数：
+
+5、Blog的创建日期显示问题，需在初始化jinja2时设置:
+
+
 
 ### 参考
 
-
+[uikit首页](https://getuikit.com/)
 
 ### 遇到的问题!!!
 
-1、命令行下运行app.py出现如下错误，注意看File "app.py", line 113, in init可知是数据库名字和密码与SQL脚本中初始化的不一样，改成www-data即可，或者直接改成root权限及密码。
-```bash
-Traceback (most recent call last):
-  File "app.py", line 125, in <module>
-    loop.run_until_complete(init(loop))
-  File "E:\Anaconda\setup\lib\asyncio\base_events.py", line 467, in run_until_complete
-    return future.result()
-  File "app.py", line 113, in init
-    await orm.create_pool(loop=loop, host='127.0.0.1', port=3306, user='www', password='www', db='awesome')
-  File "F:\python\liaoxuefeng\app\www\orm.py", line 24, in create_pool
-    loop=loop
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\utils.py", line 75, in __await__
-    resp = yield from self._coro
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\pool.py", line 30, in _create_pool
-    yield from pool._fill_free_pool(False)
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\pool.py", line 173, in _fill_free_pool
-    **self._conn_kwargs)
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\utils.py", line 70, in __iter__
-    resp = yield from self._coro
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\connection.py", line 78, in _connect
-    yield from conn._connect()
-  File "E:\Anaconda\setup\lib\site-packages\aiomysql\connection.py", line 496, in _connect
-    self._host) from e
-pymysql.err.OperationalError: (2003, "Can't connect to MySQL server on '127.0.0.1'")
+1、uikit框架模板只包含了css、js两个文件,需要自己添加fonts字体文件，及img图片文件，修改css和js中的部分自定义。
 
-```
+2、要理解\__base__\.html模板思想
 
+3、关于Blog创建日期问题，在前面初始化app.py中已经配置好了datetime_filter().
